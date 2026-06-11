@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    .container {
+      width: 800px;
+      margin: 50px auto;
+    }
+
+    img {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .info {
+      margin-top: 20px;
+    }
+
+    .info p {
+      margin: 10px 0;
+    }
+  </style>
+  <body>
+    <div id="detail">
+      <!-- js출력 -->
+    </div>
+    <script>
+      const params = new URLSearchParams(location.search);
+
+      const id = Number(params.get("id"));
+
+      async function getDetail() {
+        try {
+          const res = await fetch("cat.json");
+          const cats = await res.json();
+
+          const cat = cats.find((item) => item.id === id);
+
+          const detail = document.querySelector("#detail");
+
+          if (!cat) {
+            detail.innerHTML = `
+          <h2>고양이 정보를 찾을 수 없습니다.</h2>
+          <a href="cat.html">고양이 목록으로 돌아가기</a>
+        `;
+            return;
+          }
+
+          detail.innerHTML = `
+<div class="container">
+  <img src="${cat.image}" alt="${cat.name}">
+
+  <div class="info">
+    <h1>${cat.name}</h1>
+
+    <p><strong>원산지</strong> : ${cat.origin}</p>
+    <p><strong>성격</strong> : ${cat.temperament}</p>
+    <p><strong>수명</strong> : ${cat.life_span}</p>
+    <p><strong>지능</strong> : ${cat.intelligence}</p>
+    <p><strong>친화력</strong> : ${cat.affection_level}</p>
+
+    <h3>설명</h3>
+    <p>${cat.description}</p>
+
+    <a href="index.html" class="back-btn">
+      ← 목록으로 돌아가기
+    </a>
+  </div>
+</div>
+`;
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      getDetail();
+    </script>
+  </body>
+</html>
